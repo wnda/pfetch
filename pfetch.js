@@ -3,7 +3,7 @@
   var container = 'main';
 
   var find = function( selector, context ){
-    return (context || document).querySelector( selector );
+    return ( context || document ).querySelector( selector );
   };
 
   var stripHash = function( location ){
@@ -60,7 +60,7 @@
         headers: { 'Content-Type' : 'text/html' },
         mode: 'same-origin'
       })
-      .then(function(response)
+      .then( function( response )
       {
         var contentType = response.headers.get( 'Content-Type' );
         if ( response.ok && contentType && contentType.indexOf( 'text/html' ) !== -1 )
