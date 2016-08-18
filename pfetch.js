@@ -13,13 +13,13 @@
   var getAnchor = function( element ){
     if ( element.tagName.toLowerCase() === 'body' )
     {
-      return false;
+      return;
     }
 
     if ( !!element.href && element.tagName.toLowerCase() === 'a' )
     {
       asyncLoad( element );
-      return false;
+      return;
     }
 
     getAnchor( element.parentNode );
@@ -30,17 +30,17 @@
 
     if ( !link )
     {
-      return false;
+      return;
     }
 
     if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname )
     {
-      return false;
+      return;
     }
 
     if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) )
     {
-      return false;
+      return;
     }
 
     loadPage( link.href );
