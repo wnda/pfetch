@@ -51,7 +51,7 @@
             find( 'title' ).textContent = newTitle;
             currentPage.parentNode.replaceChild( newPage, currentPage );
             
-            if( !hash ) { window.scrollTo( 0, 0 ); }
+            if( !hash ){ window.scrollTo( 0, 0 ); }
             
           }).catch( function(){ console.info( 'Error: No HTML received' ) });
         }
@@ -65,7 +65,7 @@
       xhr.open( 'GET', url );
       xhr.responseType = 'document';
       
-      xhr.onreadystatechange = function (){
+      xhr.onreadystatechange = function(){
         if ( this.readyState === 4 && this.status >= 200 && this.status < 300 ){
           done = true;
       
@@ -76,12 +76,12 @@
           find( 'title' ).textContent = newTitle;
           currentPage.parentNode.replaceChild( newPage, currentPage );
       
-          if( !hash ) { window.scrollTo( 0, 0 ); }
+          if( !hash ){ window.scrollTo( 0, 0 ); }
         }
       };
   
       xhr.onabort = xhr.onerror = function(){
-        if ( !done ) { done = true; console.info( 'There was an error with the request' ); }
+        if ( !done ){ done = true; console.info( 'There was an error with the request' ); }
       };
   
       xhr.send();
