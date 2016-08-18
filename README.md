@@ -1,6 +1,6 @@
-# plusjax
-ajax plus.
-pjax simplified.
+# pfetch
+pjax was yesterday (and jquery dependent). 
+pfetch is today.
 
 ## what is this?
 This library started as an expansion of [this snippet](https://github.com/alexnormand/moby-dick-demo/blob/master/chapters/js/main.js) by Alex Normand.
@@ -14,7 +14,7 @@ This library left some basic problems:
 3. no graceful degradation is provided
 4. no 'API' with which to govern how the snippet works (config/init object to pick container element, custom timeouts, etc).
 
-## why not port pjax to vanilla js?
+## why not simply port pjax to vanilla js?
 
 1. it has been [done](https://github.com/martndemus/pjax). [twice](https://github.com/cantlin/vanilla-pjax). both are solid. and big.
 2. as IE8 gets shut down, we don't need as much crap in a pjax offshoot, as Alex Normand's original snippet already demonstrated.
@@ -22,4 +22,4 @@ This library left some basic problems:
 
 ## what has been added, and how?
 
-1. in case the handy line `responseType = 'document'` isn't applicable (*cough* fetch) we use the HTML parser in JavaScript to polyfill it.
+1. in case the handy line `responseType = 'document'` isn't applicable (*cough* fetch) we use the HTML parser to polyfill it.
