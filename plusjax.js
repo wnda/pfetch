@@ -57,10 +57,12 @@
   var loadPage = function( url ){
 
     var done = false;
+    
+    var hash = !!( url.indexOf( '#' ) > -1 );
 
     var xhr = new XMLHttpRequest();
 
-    xhr.open('GET', url);
+    xhr.open( 'GET', url );
 
     xhr.responseType = 'document';
     
@@ -85,8 +87,11 @@
         find( 'title' ).textContent = newTitle;
 
         currentPage.parentNode.replaceChild( newPage, currentPage );
-
-        window.scrollTo(0, 0);
+        
+        if(!hash)
+        {
+          window.scrollTo(0, 0);
+        }
       }
     };
 
