@@ -54,14 +54,22 @@
     
     if ( "fetch" in window )
     {
-      fetch( url )
-      .then(function(resp)
+      fetch( url,
+      { 
+        method: 'GET',
+        headers: { 'Content-Type' : 'text/html' },
+        mode: 'same-origin'
+      })
+      .then(function(response)
       {
-        if ( resp.ok || resp.status >= 200 && resp.status < 300 )
+        var contentType = response.headers.get( 'Content-Type' );
+        if ( response.ok && contentType && contentType.indexOf( 'text/html' ) !== -1 )
         {
-          return resp.text().then(function(txt){
+          return response.text()
+          .then( function( resptxt ){
+            
             var parser = new DOMParser(),
-                doc = parser.parseFromString( txt, "text/html" ),
+                doc = parser.parseFromString( resptxt, 'text/html' ),
                 newPage = find( container, doc ),
                 newTitle = find( 'title', doc ).textContent,
                 currentPage = find( container );
@@ -73,15 +81,16 @@
             {
               window.scrollTo(0, 0);
             }
+            
           })
-          .catch(function(){
-            console.log( "No markup received" )
+          .catch( function(){
+            console.info( 'Error: No HTML received' )
           });
         }
       })
-      .catch(function(resp)
+      .catch( function( response )
       {
-        console.error( 'Error: ' + ( resp.message || 'No data available' ) );
+        console.info( 'Error: ' + ( response.message || 'No data available' ) );
       });
     }
     
@@ -118,7 +127,7 @@
         if ( !done )
         {
           done = true;
-          console.info('There was an error with the request');
+          console.info( 'There was an error with the request' );
         }
       };
   
