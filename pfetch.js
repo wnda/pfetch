@@ -11,16 +11,9 @@
   };
 
   var getAnchor = function( element ){
-    if ( element.tagName.toLowerCase() === 'body' )
-    {
-      return;
-    }
-
-    if ( !!element.href && element.tagName.toLowerCase() === 'a' )
-    {
-      asyncLoad( element );
-      return;
-    }
+    
+    if ( element.tagName.toLowerCase() === 'body' ){ return; }
+    if ( !!element.href && element.tagName.toLowerCase() === 'a' ){ asyncLoad( element ); return; }
 
     getAnchor( element.parentNode );
 
@@ -28,20 +21,9 @@
 
   var asyncLoad = function( link ){
 
-    if ( !link )
-    {
-      return;
-    }
-
-    if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname )
-    {
-      return;
-    }
-
-    if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) )
-    {
-      return;
-    }
+    if ( !link ) { return; }
+    if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname ){ return; }
+    if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) ) { return; }
 
     loadPage( link.href );
     history.pushState( null, null, link.href );
@@ -52,21 +34,18 @@
     
     var hash = !!( url.indexOf( '#' ) > -1 );
     
-    if ( "fetch" in window )
-    {
-      fetch( url,
-      { 
+    if ( "fetch" in window ) {
+      
+      fetch( url, { 
         method: 'GET',
         headers: { 'Content-Type' : 'text/html' },
         mode: 'same-origin'
-      })
-      .then( function( response )
-      {
+      }).then( function( response ){
+        
         var contentType = response.headers.get( 'Content-Type' );
         if ( response.ok && contentType && contentType.indexOf( 'text/html' ) !== -1 )
         {
-          return response.text()
-          .then( function( resptxt ){
+          return response.text().then( function( resptxt ){
             
             var parser = new DOMParser(),
                 doc = parser.parseFromString( resptxt, 'text/html' ),
@@ -76,22 +55,12 @@
           
             find( 'title' ).textContent = newTitle;
             currentPage.parentNode.replaceChild( newPage, currentPage );
+            if( !hash ) { window.scrollTo(0, 0); }
             
-            if( !hash )
-            {
-              window.scrollTo(0, 0);
-            }
-            
-          })
-          .catch( function(){
-            console.info( 'Error: No HTML received' )
-          });
+          }).catch( function(){ console.info( 'Error: No HTML received' ) });
         }
-      })
-      .catch( function( response )
-      {
-        console.info( 'Error: ' + ( response.message || 'No data available' ) );
-      });
+      }).catch( function( response ){ console.info( 'Error: ' + ( response.message || 'No data available' ) ) });
+    
     }
     
     else
@@ -114,10 +83,7 @@
           find( 'title' ).textContent = newTitle;
           currentPage.parentNode.replaceChild( newPage, currentPage );
           
-          if( !hash )
-          {
-            window.scrollTo(0, 0);
-          }
+          if( !hash ) { window.scrollTo(0, 0); }
           
         }
         
@@ -136,8 +102,7 @@
     
   };
 
-  if ( history && history.pushState )
-  {
+  if ( history && history.pushState ) {
     find( 'body' ).addEventListener( 'click', function( e ){
       e.preventDefault();
       getAnchor( e.target );
