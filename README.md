@@ -1,4 +1,6 @@
 # pfetch
+pushState + fetch
+
 pjax was yesterday (and jquery dependent). 
 pfetch is today.
 
