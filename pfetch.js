@@ -1,4 +1,4 @@
-;(function(){
+;( function(){
 
   var container = 'main';
 
@@ -51,7 +51,7 @@
             find( 'title' ).textContent = newTitle;
             currentPage.parentNode.replaceChild( newPage, currentPage );
             
-            if( !hash ) { window.scrollTo(0, 0); }
+            if( !hash ) { window.scrollTo( 0, 0 ); }
             
           }).catch( function(){ console.info( 'Error: No HTML received' ) });
         }
@@ -76,12 +76,12 @@
           find( 'title' ).textContent = newTitle;
           currentPage.parentNode.replaceChild( newPage, currentPage );
       
-          if( !hash ) { window.scrollTo(0, 0); }
+          if( !hash ) { window.scrollTo( 0, 0 ); }
         }
       };
   
       xhr.onabort = xhr.onerror = function(){
-        if ( !done ) { done = true;console.info( 'There was an error with the request' ); }
+        if ( !done ) { done = true; console.info( 'There was an error with the request' ); }
       };
   
       xhr.send();
@@ -96,7 +96,7 @@
       getAnchor( e.target );
     });
 
-    setTimeout(function(){
+    setTimeout( function(){
       window.onpopstate = function(){
         loadPage( window.location.href );
       };
