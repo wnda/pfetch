@@ -92,6 +92,7 @@
 
   if ( history && history.pushState ){
     find( 'body' ).addEventListener( 'click', function( e ){
+      if ( e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey ){ return; }
       e.preventDefault();
       getAnchor( e.target );
     });
