@@ -63,7 +63,6 @@
     current_page.parentNode.replaceChild( new_page, current_page );
     appendAndRunScripts( new_scripts );
 
-    if( !hash ) window.scrollTo( 0, 0 );
   };
 
   var loadPage = function( url ){
@@ -102,8 +101,8 @@
   if ( history && history.pushState ){
 
     find( 'body' ).addEventListener( 'click', function( e ){
-      e.preventDefault();
       if ( e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey ) return;
+      e.preventDefault();
       getLinkFromEventTarget( e.target );
     });
 
