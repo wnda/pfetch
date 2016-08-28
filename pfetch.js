@@ -28,7 +28,7 @@
     var i = new_scripts.length, j = 0;
     for( ; i > j; j++ )
     {
-      var script_to_add = document.createElement( 'script' );}
+      var script_to_add = document.createElement( 'script' );
       if( new_scripts[j].type ){ script_to_add.type = new_scripts[j].type;}
       if( new_scripts[j].async ){ script_to_add.setAttribute('async','');}
       if( new_scripts[j].src ){ script_to_add.src = new_scripts[j].src;}
