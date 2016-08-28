@@ -9,6 +9,25 @@
   var findAll = function( selector, context ){
     return ( context || document ).querySelectorAll( selector );
   };
+  
+  var runScripts = function( new_scripts ){
+    
+    var i = new_scripts.length, j = 0;
+    
+    for( ; i > j; j++ )
+    {
+      var script_to_add = document.createElement( 'script' );
+
+      if( new_scripts[j].type ) script_to_add.type = new_scripts[j].type;
+      
+      if( new_scripts[j].async ) script_to_add.setAttribute('async','');
+      
+      if( new_scripts[j].src ) script_to_add.src = new_scripts[j].src;
+      else script_to_add.textContent = new_scripts[nso].textContent;
+
+      ( document.head || document.getElementsByTagName('head')[0] ).appendChild( script_to_add );
+    }
+  };
 
   var stripHash = function( location ){
     return location.href.replace(/#.*/, '');
@@ -50,12 +69,14 @@
                 doc = parser.parseFromString( resptxt, 'text/html' ),
                 newPage = find( container, doc ),
                 newTitle = find( 'title', doc ).textContent,
-                currentPage = find( container );
+                currentPage = find( container ),
+                new_scripts = findAll( 'script', doc );
             
             find( 'title' ).textContent = newTitle;
             currentPage.parentNode.replaceChild( newPage, currentPage );
+            runScripts( new_scripts );
             
-            if( !hash ){ window.scrollTo( 0, 0 ); }
+            if( !hash ) window.scrollTo( 0, 0 ); 
             
           }).catch( function(){ console.info( 'Error: failed to parse new HTML' ) });
         }
