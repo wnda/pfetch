@@ -13,21 +13,30 @@
   var findAllByTagName = function( selector, context ){
     return ( context || document ).getElementsByTagName( selector );
   };
+  
+  var matchScripts = function( new_scripts ){
+    var existing_scripts = document.querySelectorAll('script[src]');
+    var Index;
+    for (var i=0; i<Array2.length; i++) {
+        Index = Array1.indexOf(Array2[i]);
+        if (Index > -1) {
+            Array1.splice(Index, 1);
+        }
+    }
+  };
 
   var appendAndRunScripts = function( new_scripts ){
+    if( !scripts ) return;
+    
+    var new_scripts = matchScripts( new_scripts );
+    
     var i = new_scripts.length, j = 0;
-    for( ; i > j; j++ )
-    {
+    for( ; i > j; j++ ){
       var script_to_add = document.createElement( 'script' );
-
       if( new_scripts[j].type ) script_to_add.type = new_scripts[j].type;
-
       if( new_scripts[j].async ) script_to_add.setAttribute( 'async','' );
-
       if( new_scripts[j].src ) script_to_add.src = new_scripts[j].src;
-
       if( new_scripts[j].textContent ) script_to_add.textContent = new_scripts[j].textContent;
-
       ( document.head || document.getElementsByTagName('head')[0] ).appendChild( script_to_add );
     }
   };
@@ -47,7 +56,6 @@
     if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname ) return;
     if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) ) return;
     loadPage( link.href );
-    history.pushState( null, null, link.href );
   };
 
   var processNewHTML = function( resp_txt, url ){
@@ -61,9 +69,17 @@
 
     find( 'title' ).textContent = new_title;
     current_page.parentNode.replaceChild( new_page, current_page );
-    appendAndRunScripts( new_scripts );
+    appendAndRunScripts( [].slice.call( new_scripts, 0 ) );
+    history.pushState( null, '', url );
 
   };
+  
+  var abortXHR = function(xhr) {
+    if ( xhr && xhr.readyState < 4) {
+      xhr.onreadystatechange = null;
+      xhr.abort();
+    }
+  }
 
   var loadPage = function( url ){
 
@@ -86,6 +102,8 @@
 
       var xhr = new XMLHttpRequest();
       xhr.open( 'GET', url );
+      xhr.setRequestHeader('X-PFETCH', 'true');
+      xhr.setRequestHeader('X-PFETCH-Container', container);
       xhr.onreadystatechange = function(){
         if ( this.readyState === 4 && this.status >= 200 && this.status < 300 ){
           processNewHTML( this.response, url );
