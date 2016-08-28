@@ -86,7 +86,7 @@
         var contentType = response.headers.get( 'Content-Type' );
         if ( response.ok && contentType && contentType.indexOf( 'text/html' ) !== -1 ){
           return response.text().then( function( resptxt ){
-            processNewHTML( resptxt )
+            processNewHTML( resptxt );
           }).catch( function(){ console.info( 'Error: failed to parse new HTML' ) });
         }
       }).catch( function( response ){ console.info( 'Error: ' + ( response.message || 'No data available' ) ) });
