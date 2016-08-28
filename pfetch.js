@@ -15,12 +15,12 @@
   };
   
   var matchScripts = function( new_scripts ){
-    var existing_scripts = document.querySelectorAll('script[src]');
-    var Index;
-    for (var i=0; i<Array2.length; i++) {
-        Index = Array1.indexOf(Array2[i]);
-        if (Index > -1) {
-            Array1.splice(Index, 1);
+    var existing_scripts = [].slice.call(document.querySelectorAll('script[src]'), 0);
+    var idx;
+    for(var i=0; i<existing_scripts.length; i++){
+        idx = new_scripts.indexOf(existing_scripts[i]);
+        if (idx > -1) {
+            new_scripts.splice(idx, 1);
         }
     }
   };
