@@ -5,21 +5,25 @@
   var find = function( selector, context ){
     return ( context || document ).querySelector( selector );
   };
+  
+  var findAll = function( selector, context ){
+    return ( context || document ).querySelectorAll( selector );
+  };
 
   var stripHash = function( location ){
     return location.href.replace(/#.*/, '');
   };
 
-  var getAnchor = function( element ){
-    if ( element.tagName.toLowerCase() === 'body' ){ return; }
-    if ( !!element.href && element.tagName.toLowerCase() === 'a' ){ asyncLoad( element ); return; }
-    getAnchor( element.parentNode );
+  var getLinkFromEventTarget = function( element ){
+    if ( element.tagName.toLowerCase() === 'body' ) return; 
+    if ( !!element.href && element.tagName.toLowerCase() === 'a' ) processLink( element ); return;
+    getLinkFromEventTarget( element.parentNode );
   };
 
-  var asyncLoad = function( link ){
-    if ( !link ){ return; }
-    if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname ){ return; }
-    if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) ){ return; }
+  var processLink = function( link ){
+    if ( !link ) return;
+    if ( window.location.protocol !== link.protocol || window.location.hostname !== link.hostname ) return;
+    if ( link.href.indexOf( '#' ) > -1 && stripHash( link ) == stripHash( window.location ) ) return;
     
     loadPage( link.href );
     history.pushState( null, null, link.href );
@@ -53,7 +57,7 @@
             
             if( !hash ){ window.scrollTo( 0, 0 ); }
             
-          }).catch( function(){ console.info( 'Error: No HTML received' ) });
+          }).catch( function(){ console.info( 'Error: failed to parse new HTML' ) });
         }
       }).catch( function( response ){ console.info( 'Error: ' + ( response.message || 'No data available' ) ) });
     
@@ -94,7 +98,7 @@
     find( 'body' ).addEventListener( 'click', function( e ){
       if ( e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey ){ return; }
       e.preventDefault();
-      getAnchor( e.target );
+      getLinkFromEventTarget( e.target );
     });
 
     setTimeout( function(){
