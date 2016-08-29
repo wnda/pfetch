@@ -120,6 +120,7 @@
 
     find( 'body' ).addEventListener( 'click', function( e ){
       if ( e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey ) return;
+      if (event.isDefaultPrevented()) return;
       e.preventDefault();
       getLinkFromEventTarget( e.target );
     });
