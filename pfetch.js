@@ -14,23 +14,26 @@
     return ( context || document ).getElementsByTagName( selector );
   };
   
-  var matchScripts = function( new_scripts ){
-    var existing_scripts = [].slice.call(document.querySelectorAll('script[src]'), 0);
-    var idx;
-    for(var i=0; i<existing_scripts.length; i++){
-        idx = new_scripts.indexOf(existing_scripts[i]);
-        if (idx > -1) {
-            new_scripts.splice(idx, 1);
-        }
+  var removeDuplicateScripts = function( new_scripts ){
+    if( !scripts ) return;
+    var existing_scripts = [].slice.call( document.querySelectorAll( 'script[src]' ), 0 ),
+        i = existing_scripts.length,
+        j = 0,
+        idx;
+        
+    for( ; i > j; j++ ){
+        idx = new_scripts.indexOf( existing_scripts[j] );
+        if ( idx > -1 ) new_scripts.splice( idx, 1 );
     }
+    
+    return new_scripts;
   };
 
   var appendAndRunScripts = function( new_scripts ){
-    if( !scripts ) return;
-    
-    var new_scripts = matchScripts( new_scripts );
-    
-    var i = new_scripts.length, j = 0;
+    var new_scripts = matchScripts( [].slice.call( new_scripts, 0 ) ),
+        i = new_scripts.length, 
+        j = 0;
+        
     for( ; i > j; j++ ){
       var script_to_add = document.createElement( 'script' );
       if( new_scripts[j].type ) script_to_add.type = new_scripts[j].type;
@@ -69,9 +72,9 @@
 
     find( 'title' ).textContent = new_title;
     current_page.parentNode.replaceChild( new_page, current_page );
-    appendAndRunScripts( [].slice.call( new_scripts, 0 ) );
+    appendAndRunScripts( new_scripts );
     history.pushState( null, '', url );
-
+    
   };
   
   var abortXHR = function(xhr) {
@@ -82,9 +85,7 @@
   }
 
   var loadPage = function( url ){
-
     if ( "fetch" in window ){
-
       fetch( url, {
         method: 'GET',
         headers: { 'Content-Type' : 'text/html' },
@@ -97,19 +98,18 @@
           }).catch( function(){ console.error( 'Error: failed to parse new HTML' ); });
         }
       }).catch( function( response ){ console.error( 'Error: ' + ( response.message || 'No data available' ) ); });
-
     } else {
-
       var xhr = new XMLHttpRequest();
+      var done = false;
       xhr.open( 'GET', url );
-      xhr.setRequestHeader('X-PFETCH', 'true');
-      xhr.setRequestHeader('X-PFETCH-Container', container);
       xhr.onreadystatechange = function(){
         if ( this.readyState === 4 && this.status >= 200 && this.status < 300 ){
+          done = true;
           processNewHTML( this.response, url );
         }
       };
       xhr.onabort = xhr.onerror = function(){
+        if ( !done ) done = true;
         console.error( 'There was an error with the request' );
       };
       xhr.send();
@@ -117,19 +117,16 @@
   };
 
   if ( history && history.pushState ){
-
     find( 'body' ).addEventListener( 'click', function( e ){
       if ( e.which > 1 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey ) return;
       if (event.isDefaultPrevented()) return;
       e.preventDefault();
       getLinkFromEventTarget( e.target );
     });
-
     setTimeout( function(){
       window.onpopstate = function(){
         loadPage( window.location.href );
       };
     }, 1e3);
-
   }
 })();
