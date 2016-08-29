@@ -45,7 +45,7 @@
   };
 
   var stripHash = function( location ){
-    return location.href.replace(/#.*/, '');
+    return location.href.replace( /#.*/, '' );
   };
 
   var getLinkFromEventTarget = function( element ){
@@ -77,8 +77,8 @@
     
   };
   
-  var abortXHR = function(xhr) {
-    if ( xhr && xhr.readyState < 4) {
+  var abortXHR = function( xhr ) {
+    if ( xhr && xhr.readyState < 4 ) {
       xhr.onreadystatechange = null;
       xhr.abort();
     }
@@ -90,14 +90,22 @@
         method: 'GET',
         headers: { 'Content-Type' : 'text/html' },
         mode: 'same-origin'
-      }).then( function( response ){
+      })
+      .then( function( response ){
         var contentType = response.headers.get( 'Content-Type' );
         if ( response.ok && contentType && contentType.indexOf( 'text/html' ) !== -1 ){
-          return response.text().then( function( resp_txt ){
-            processNewHTML( resp_txt, url );
-          }).catch( function(){ console.error( 'Error: failed to parse new HTML' ); });
+          return response.text()
+                  .then( function( resp_txt ){
+                    processNewHTML( resp_txt, url );
+          })
+          .catch( function(){
+            console.error( 'Error: failed to parse new HTML' );
+          });
         }
-      }).catch( function( response ){ console.error( 'Error: ' + ( response.message || 'No data available' ) ); });
+      })
+      .catch( function( response ){
+        console.error( 'Error: ' + ( response.message || 'No data available' ) ); 
+      });
     } else {
       var xhr = new XMLHttpRequest();
       var done = false;
