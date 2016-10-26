@@ -1,3 +1,6 @@
+# warning
+this lib will disappear soon in favour of a new one inspired by pjax.
+
 # pfetch
 pushState + fetch
 
